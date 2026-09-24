@@ -1,6 +1,6 @@
 // drill.js — the protocol as a guided, timed form. Code box is locked until steps 1–6 are written.
 import { db, uid, today } from './db.js';
-import { h, toast, fmtSecs, copyText } from './app.js';
+import { h, mount, toast, fmtSecs, copyText } from './app.js';
 
 export const STEPS = [
   { key: 'restate', title: 'Restate', hint: 'One sentence, your own words. Include what is being minimised / maximised / counted and the answer type.' },
@@ -65,7 +65,7 @@ function renderSetup() {
     h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'submit' }, 'Start timer'),
       h('span', { class: 'help' }, 'The clock starts now. Steps 1–6 must be written before the code box unlocks.')),
   );
-  root.replaceChildren(h('h1', {}, 'Drill'), h('p', { class: 'muted' }, 'Timed derivation. You think, the app enforces the order and measures where you stall.'), form);
+  mount(root, h('h1', {}, 'Drill'), h('p', { class: 'muted' }, 'Timed derivation. You think, the app enforces the order and measures where you stall.'), form);
   title.focus();
 }
 
@@ -133,7 +133,7 @@ function renderActive() {
   });
 
   const pm = renderPostMortem();
-  root.replaceChildren(h('h1', {}, 'Drill'), timerbar, statement, ...stepEls, pm);
+  mount(root, h('h1', {}, 'Drill'), timerbar, statement, ...stepEls, pm);
   refreshLock();
   startTick();
   const first = STEPS.find(s => !state.steps[s.key].trim());

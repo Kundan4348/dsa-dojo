@@ -1,10 +1,11 @@
 // sw.js — precache the shell; network-first for data/ so authored content updates without a release.
-const CACHE = 'dojo-v1';
+const CACHE = 'dojo-v2';
 const SHELL = [
   './', './index.html', './manifest.json', './css/app.css',
   './js/app.js', './js/db.js', './js/drill.js', './js/log.js', './js/patterns.js', './js/md.js', './js/hl.js',
+  './js/recall.js', './js/contests.js', './js/mock.js', './js/schedule.js',
   './icons/icon.svg', './icons/icon-192.png', './icons/icon-512.png',
-  './data/patterns/index.json',
+  './data/patterns/index.json', './data/contests.json',
 ];
 
 self.addEventListener('install', (e) => {

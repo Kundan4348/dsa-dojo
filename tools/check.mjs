@@ -56,6 +56,23 @@ const logRows = await evalJs(`document.querySelectorAll('tbody tr').length`);
 await shot('08-log.png');
 const histTop = await evalJs(`document.querySelector('.hist-row.top span')?.textContent || ''`);
 
+// Session 2: recall, contests, mock, today
+await go('#/recall'); await sleep(500); await shot('11-recall.png');
+const recallCards = await evalJs(`document.querySelectorAll('.view > div > .card').length`);
+await evalJs(`[...document.querySelectorAll('button')].find(b => b.textContent.includes('Came back')).click()`); await sleep(500);
+const recallAfter = await evalJs(`(async () => { const r = indexedDB.open('dsa-dojo'); await new Promise(res => r.onsuccess = res); const t = r.result.transaction('cards').objectStore('cards').getAll(); await new Promise(res => t.onsuccess = res); return t.result.filter(c => c.box === 2).length; })()`);
+await go('#/contests'); await sleep(600); await shot('12-contests.png');
+const contestRows = await evalJs(`document.querySelectorAll('tbody tr').length`);
+await go('#/mock'); await sleep(300);
+await evalJs(`(() => { const f = document.querySelector('form'); f.querySelector('input').value = 'Mock: Meeting Rooms II'; f.requestSubmit(); })()`); await sleep(500);
+await shot('13-mock.png');
+await evalJs(`(() => { document.querySelectorAll('[role=radiogroup]').forEach(g => g.querySelectorAll('.btn')[2].click()); })()`);
+await evalJs(`[...document.querySelectorAll('button')].find(b => b.textContent === 'Save mock').click()`); await sleep(800);
+const mockRows = await evalJs(`[...document.querySelectorAll('h2')].some(h => h.textContent === 'Mocks') ? document.querySelectorAll('tbody')[1].querySelectorAll('tr').length : 0`);
+await shot('14-log-with-mock.png');
+await go('#/today'); await sleep(500); await shot('15-today-plan.png');
+const todayTasks = await evalJs(`document.querySelectorAll('.step-num').length`);
+
 // Mobile viewport
 await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 2, mobile: true }, s);
 await go('#/drill'); await sleep(300); await shot('09-mobile-drill.png');
@@ -64,6 +81,7 @@ await go('#/patterns/prefix-sum-hash'); await sleep(300); await shot('10-mobile-
 const swState = await evalJs(`navigator.serviceWorker.getRegistration().then(r => r ? (r.active ? 'active' : 'registered') : 'none')`);
 const manifestOk = await evalJs(`fetch('manifest.json').then(r => r.ok)`);
 
-console.log(JSON.stringify({ lockedBefore, lockedAfter, logRows, histTop, swState, manifestOk, errors }, null, 2));
+console.log(JSON.stringify({ lockedBefore, lockedAfter, logRows, histTop, recallCards, recallAfter, contestRows, mockRows, todayTasks, swState, manifestOk, errors }, null, 2));
 chrome.kill();
-process.exit(errors.length || lockedBefore !== true || lockedAfter !== false || logRows !== 1 ? 1 : 0);
+const ok = !errors.length && lockedBefore === true && lockedAfter === false && logRows === 1 && recallCards >= 1 && recallAfter === 1 && contestRows > 0 && mockRows === 1 && todayTasks >= 2;
+process.exit(ok ? 0 : 1);

@@ -1,0 +1,535 @@
+{
+  "fetchedAt": "2026-09-24T04:26:07Z",
+  "contests": [
+    {
+      "contest": "Weekly Contest 520",
+      "slug": "weekly-contest-520",
+      "date": "2026-09-20",
+      "problems": [
+        {
+          "pos": "Q1",
+          "title": "Number of Intersecting Interval Pairs I",
+          "slug": "number-of-intersecting-interval-pairs-i",
+          "url": "https://leetcode.com/problems/number-of-intersecting-interval-pairs-i/",
+          "credit": 3,
+          "id": "4056",
+          "difficulty": "Easy",
+          "tags": [],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q2",
+          "title": "Number of Intersecting Interval Pairs II",
+          "slug": "number-of-intersecting-interval-pairs-ii",
+          "url": "https://leetcode.com/problems/number-of-intersecting-interval-pairs-ii/",
+          "credit": 5,
+          "id": "4057",
+          "difficulty": "Medium",
+          "tags": [],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q3",
+          "title": "Maximum Pulse Value After One Subarray Rotation",
+          "slug": "maximum-pulse-value-after-one-subarray-rotation",
+          "url": "https://leetcode.com/problems/maximum-pulse-value-after-one-subarray-rotation/",
+          "credit": 5,
+          "id": "4058",
+          "difficulty": "Medium",
+          "tags": [],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q4",
+          "title": "Lexicographically Largest Power Array",
+          "slug": "lexicographically-largest-power-array",
+          "url": "https://leetcode.com/problems/lexicographically-largest-power-array/",
+          "credit": 7,
+          "id": "4059",
+          "difficulty": "Hard",
+          "tags": [],
+          "paidOnly": false
+        }
+      ]
+    },
+    {
+      "contest": "Weekly Contest 519",
+      "slug": "weekly-contest-519",
+      "date": "2026-09-13",
+      "problems": [
+        {
+          "pos": "Q1",
+          "title": "Cyclically Shift Rows and Columns",
+          "slug": "cyclically-shift-rows-and-columns",
+          "url": "https://leetcode.com/problems/cyclically-shift-rows-and-columns/",
+          "credit": 3,
+          "id": "4052",
+          "difficulty": "Easy",
+          "tags": [
+            "Array",
+            "Matrix",
+            "Simulation"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q2",
+          "title": "Minimum Operations to Make Every Element Palindromic",
+          "slug": "minimum-operations-to-make-every-element-palindromic",
+          "url": "https://leetcode.com/problems/minimum-operations-to-make-every-element-palindromic/",
+          "credit": 5,
+          "id": "4053",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "Binary Search"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q3",
+          "title": "Count Shadow Pairs I",
+          "slug": "count-shadow-pairs-i",
+          "url": "https://leetcode.com/problems/count-shadow-pairs-i/",
+          "credit": 5,
+          "id": "4054",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "Stack",
+            "Monotonic Stack"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q4",
+          "title": "Count Shadow Pairs II",
+          "slug": "count-shadow-pairs-ii",
+          "url": "https://leetcode.com/problems/count-shadow-pairs-ii/",
+          "credit": 6,
+          "id": "4055",
+          "difficulty": "Hard",
+          "tags": [
+            "Array",
+            "Binary Search",
+            "Divide and Conquer",
+            "Stack",
+            "Binary Indexed Tree",
+            "Segment Tree",
+            "Sorting",
+            "Monotonic Stack"
+          ],
+          "paidOnly": false
+        }
+      ]
+    },
+    {
+      "contest": "Biweekly Contest 191",
+      "slug": "biweekly-contest-191",
+      "date": "2026-09-12",
+      "problems": [
+        {
+          "pos": "Q1",
+          "title": "Count Values With Equally Spaced Occurrences I",
+          "slug": "count-values-with-equally-spaced-occurrences-i",
+          "url": "https://leetcode.com/problems/count-values-with-equally-spaced-occurrences-i/",
+          "credit": 3,
+          "id": "4048",
+          "difficulty": "Easy",
+          "tags": [
+            "Array",
+            "Hash Table"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q2",
+          "title": "Count Values With Equally Spaced Occurrences II",
+          "slug": "count-values-with-equally-spaced-occurrences-ii",
+          "url": "https://leetcode.com/problems/count-values-with-equally-spaced-occurrences-ii/",
+          "credit": 4,
+          "id": "4049",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "Hash Table"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q3",
+          "title": "Minimum Days to Score Exactly N Points",
+          "slug": "minimum-days-to-score-exactly-n-points",
+          "url": "https://leetcode.com/problems/minimum-days-to-score-exactly-n-points/",
+          "credit": 5,
+          "id": "4050",
+          "difficulty": "Medium",
+          "tags": [
+            "Math",
+            "Dynamic Programming"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q4",
+          "title": "Count Subarrays with Distant Sums",
+          "slug": "count-subarrays-with-distant-sums",
+          "url": "https://leetcode.com/problems/count-subarrays-with-distant-sums/",
+          "credit": 6,
+          "id": "4051",
+          "difficulty": "Hard",
+          "tags": [
+            "Array",
+            "Binary Search",
+            "Binary Indexed Tree",
+            "Segment Tree",
+            "Prefix Sum"
+          ],
+          "paidOnly": false
+        }
+      ]
+    },
+    {
+      "contest": "Weekly Contest 518",
+      "slug": "weekly-contest-518",
+      "date": "2026-09-06",
+      "problems": [
+        {
+          "pos": "Q1",
+          "title": "Count Rotations With Exactly K Equal Adjacent Pairs",
+          "slug": "count-rotations-with-exactly-k-equal-adjacent-pairs",
+          "url": "https://leetcode.com/problems/count-rotations-with-exactly-k-equal-adjacent-pairs/",
+          "credit": 3,
+          "id": "4043",
+          "difficulty": "Easy",
+          "tags": [
+            "String",
+            "Sliding Window",
+            "Enumeration"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q2",
+          "title": "Count Good Cyclic Rotations",
+          "slug": "count-good-cyclic-rotations",
+          "url": "https://leetcode.com/problems/count-good-cyclic-rotations/",
+          "credit": 4,
+          "id": "4044",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "Sliding Window",
+            "Prefix Sum"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q3",
+          "title": "Count Robot Groups",
+          "slug": "count-robot-groups",
+          "url": "https://leetcode.com/problems/count-robot-groups/",
+          "credit": 5,
+          "id": "4045",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "Stack",
+            "Monotonic Stack"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q4",
+          "title": "Minimum Cost Path With At Most K Turns",
+          "slug": "minimum-cost-path-with-at-most-k-turns",
+          "url": "https://leetcode.com/problems/minimum-cost-path-with-at-most-k-turns/",
+          "credit": 6,
+          "id": "4046",
+          "difficulty": "Hard",
+          "tags": [
+            "Array",
+            "Heap",
+            "Graph Theory",
+            "Matrix",
+            "Shortest Path"
+          ],
+          "paidOnly": false
+        }
+      ]
+    },
+    {
+      "contest": "Weekly Contest 517",
+      "slug": "weekly-contest-517",
+      "date": "2026-08-30",
+      "problems": [
+        {
+          "pos": "Q1",
+          "title": "Count Integers Appearing in a Single Block",
+          "slug": "count-integers-appearing-in-a-single-block",
+          "url": "https://leetcode.com/problems/count-integers-appearing-in-a-single-block/",
+          "credit": 3,
+          "id": "4038",
+          "difficulty": "Easy",
+          "tags": [
+            "Array",
+            "Hash Table",
+            "Counting"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q2",
+          "title": "Sum of Decoded Numbers",
+          "slug": "sum-of-decoded-numbers",
+          "url": "https://leetcode.com/problems/sum-of-decoded-numbers/",
+          "credit": 5,
+          "id": "4039",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "Math",
+            "Simulation"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q3",
+          "title": "Minimum Operations to Form Subset Sum I",
+          "slug": "minimum-operations-to-form-subset-sum-i",
+          "url": "https://leetcode.com/problems/minimum-operations-to-form-subset-sum-i/",
+          "credit": 5,
+          "id": "4040",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "Dynamic Programming"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q4",
+          "title": "Minimum Operations to Form Subset Sum II",
+          "slug": "minimum-operations-to-form-subset-sum-ii",
+          "url": "https://leetcode.com/problems/minimum-operations-to-form-subset-sum-ii/",
+          "credit": 6,
+          "id": "4041",
+          "difficulty": "Hard",
+          "tags": [
+            "Array",
+            "Dynamic Programming"
+          ],
+          "paidOnly": false
+        }
+      ]
+    },
+    {
+      "contest": "Biweekly Contest 190",
+      "slug": "biweekly-contest-190",
+      "date": "2026-08-29",
+      "problems": [
+        {
+          "pos": "Q1",
+          "title": "Minimum Bishop Moves to Reach Target",
+          "slug": "minimum-bishop-moves-to-reach-target",
+          "url": "https://leetcode.com/problems/minimum-bishop-moves-to-reach-target/",
+          "credit": 4,
+          "id": "4034",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "Math"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q2",
+          "title": "Maximum Valid Split Positions I",
+          "slug": "maximum-valid-split-positions-i",
+          "url": "https://leetcode.com/problems/maximum-valid-split-positions-i/",
+          "credit": 4,
+          "id": "4035",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "Math",
+            "Enumeration",
+            "Number Theory"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q3",
+          "title": "Lexicographically Largest String After Pair Transformations",
+          "slug": "lexicographically-largest-string-after-pair-transformations",
+          "url": "https://leetcode.com/problems/lexicographically-largest-string-after-pair-transformations/",
+          "credit": 5,
+          "id": "4036",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "String",
+            "Greedy",
+            "Bit Manipulation"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q4",
+          "title": "Maximum Valid Split Positions II",
+          "slug": "maximum-valid-split-positions-ii",
+          "url": "https://leetcode.com/problems/maximum-valid-split-positions-ii/",
+          "credit": 7,
+          "id": "4037",
+          "difficulty": "Hard",
+          "tags": [
+            "Array",
+            "Math",
+            "Enumeration",
+            "Number Theory"
+          ],
+          "paidOnly": false
+        }
+      ]
+    },
+    {
+      "contest": "Weekly Contest 516",
+      "slug": "weekly-contest-516",
+      "date": "2026-08-23",
+      "problems": [
+        {
+          "pos": "Q1",
+          "title": "Check ASCII Palindromic",
+          "slug": "check-ascii-palindromic",
+          "url": "https://leetcode.com/problems/check-ascii-palindromic/",
+          "credit": 3,
+          "id": "4030",
+          "difficulty": "Easy",
+          "tags": [
+            "Two Pointers",
+            "String",
+            "Bit Manipulation"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q2",
+          "title": "Find All Numbers Disappeared in an Array II",
+          "slug": "find-all-numbers-disappeared-in-an-array-ii",
+          "url": "https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array-ii/",
+          "credit": 4,
+          "id": "4031",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "Binary Search",
+            "Sorting"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q3",
+          "title": "Longest Subarray With at Most K Distinct Prime Factors",
+          "slug": "longest-subarray-with-at-most-k-distinct-prime-factors",
+          "url": "https://leetcode.com/problems/longest-subarray-with-at-most-k-distinct-prime-factors/",
+          "credit": 5,
+          "id": "4032",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "Hash Table",
+            "Math",
+            "Sliding Window",
+            "Number Theory"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q4",
+          "title": "Valid K-Unique Subarrays I",
+          "slug": "valid-k-unique-subarrays-i",
+          "url": "https://leetcode.com/problems/valid-k-unique-subarrays-i/",
+          "credit": 6,
+          "id": "4033",
+          "difficulty": "Hard",
+          "tags": [
+            "Array",
+            "Bit Manipulation",
+            "Binary Indexed Tree",
+            "Segment Tree",
+            "Hash Function",
+            "Prefix Sum"
+          ],
+          "paidOnly": false
+        }
+      ]
+    },
+    {
+      "contest": "Weekly Contest 515",
+      "slug": "weekly-contest-515",
+      "date": "2026-08-16",
+      "problems": [
+        {
+          "pos": "Q1",
+          "title": "Nearest Available Drone",
+          "slug": "nearest-available-drone",
+          "url": "https://leetcode.com/problems/nearest-available-drone/",
+          "credit": 3,
+          "id": "4024",
+          "difficulty": "Easy",
+          "tags": [
+            "Array",
+            "Enumeration"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q2",
+          "title": "Minimize the Maximum Waiting Time at Synchronized Traffic Lights",
+          "slug": "minimize-the-maximum-waiting-time-at-synchronized-traffic-lights",
+          "url": "https://leetcode.com/problems/minimize-the-maximum-waiting-time-at-synchronized-traffic-lights/",
+          "credit": 4,
+          "id": "4025",
+          "difficulty": "Medium",
+          "tags": [
+            "Array",
+            "Greedy"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q3",
+          "title": "Maximum Gap Between Stations",
+          "slug": "maximum-gap-between-stations",
+          "url": "https://leetcode.com/problems/maximum-gap-between-stations/",
+          "credit": 5,
+          "id": "4026",
+          "difficulty": "Medium",
+          "tags": [
+            "Two Pointers",
+            "String",
+            "Greedy"
+          ],
+          "paidOnly": false
+        },
+        {
+          "pos": "Q4",
+          "title": "Elevator Requests III",
+          "slug": "elevator-requests-iii",
+          "url": "https://leetcode.com/problems/elevator-requests-iii/",
+          "credit": 6,
+          "id": "4027",
+          "difficulty": "Hard",
+          "tags": [
+            "Array",
+            "Dynamic Programming",
+            "Bit Manipulation",
+            "Sorting",
+            "Bitmask"
+          ],
+          "paidOnly": false
+        }
+      ]
+    }
+  ]
+}

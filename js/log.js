@@ -1,20 +1,35 @@
 // log.js — every drill, the stall histogram, export/import, settings.
 import { db } from './db.js';
-import { h, toast, fmtSecs, INTERVIEW_DATE_KEY, updateDaysLeft } from './app.js';
+import { h, mount, toast, fmtSecs, INTERVIEW_DATE_KEY, updateDaysLeft } from './app.js';
 import { STEPS } from './drill.js';
+import { RUBRIC } from './mock.js';
 
 export async function renderLog(container, params = {}) {
   const drills = (await db.all('drills')).sort((a, b) => (b.date + b.id).localeCompare(a.date + a.id));
   if (params.path && params.path[0]) return renderDetail(container, drills.find(d => d.id === params.path[0]));
 
-  container.replaceChildren(
-    h('div', { class: 'row between' }, h('h1', {}, 'Log'), h('span', { class: 'muted small' }, `${drills.length} drill${drills.length === 1 ? '' : 's'}`)),
+  const mocks = (await db.all('mocks')).sort((a, b) => (b.date + b.id).localeCompare(a.date + a.id));
+  mount(container, 
+    h('div', { class: 'row between' }, h('h1', {}, 'Log'), h('span', { class: 'muted small' }, `${drills.length} drill${drills.length === 1 ? '' : 's'} · ${mocks.length} mock${mocks.length === 1 ? '' : 's'}`)),
     renderHistogram(drills),
     h('h2', {}, 'Drills'),
     drills.length ? renderTable(drills) : h('div', { class: 'card empty' }, 'No drills yet. ', h('a', { href: '#/drill' }, 'Run the first one.')),
+    mocks.length ? h('div', {}, h('h2', {}, 'Mocks'), renderMocks(mocks)) : null,
     h('h2', {}, 'Data & settings'),
     await renderSettings(),
   );
+}
+
+function renderMocks(mocks) {
+  return h('div', { class: 'card', style: 'padding:0;overflow:auto' }, h('table', {},
+    h('thead', {}, h('tr', {}, h('th', {}, 'Date'), h('th', {}, 'Problem'), h('th', {}, 'Score'), ...RUBRIC.map(r => h('th', { title: r[2] }, r[1].split(' ')[0])), h('th', {}, 'Time'), h('th', {}, 'Reflection'))),
+    h('tbody', {}, ...mocks.map(m => h('tr', {},
+      h('td', { class: 'mono small' }, m.date),
+      h('td', {}, m.problemUrl ? h('a', { href: m.problemUrl, target: '_blank', rel: 'noopener' }, m.problemTitle) : m.problemTitle),
+      h('td', { class: 'mono', style: `color:${m.score >= 12 ? 'var(--ok)' : m.score >= 8 ? 'var(--warn)' : 'var(--bad)'}` }, `${m.score}/15`),
+      ...RUBRIC.map(r => h('td', { class: 'mono' }, String(m.rubric?.[r[0]] ?? '-'))),
+      h('td', { class: 'mono small' }, fmtSecs(m.totalSeconds)),
+      h('td', { class: 'small' }, m.reflection || h('span', { class: 'muted' }, '—')))))));
 }
 
 function stepIndex(key) { return STEPS.findIndex(s => s.key === key); }
@@ -52,8 +67,8 @@ function renderTable(drills) {
 }
 
 function renderDetail(container, d) {
-  if (!d) { container.replaceChildren(h('h1', {}, 'Not found'), h('a', { href: '#/log' }, '← Log')); return; }
-  container.replaceChildren(
+  if (!d) { mount(container, h('h1', {}, 'Not found'), h('a', { href: '#/log' }, '← Log')); return; }
+  mount(container, 
     h('a', { href: '#/log', class: 'small' }, '← Log'),
     h('h1', {}, d.problemTitle),
     h('p', { class: 'muted' }, `${d.date} · `, h('span', { class: `result-${d.result}` }, d.result), ` · ${fmtSecs(d.totalSeconds)} · stalled at ${stepIndex(d.stalledAt) + 1}. ${STEPS[stepIndex(d.stalledAt)]?.title} · ${d.hints} hint(s)`),

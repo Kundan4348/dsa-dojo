@@ -1,5 +1,5 @@
 // patterns.js — the 25 core patterns: cues, invariant, explanation at 4 depths, template, twists, follow-ups.
-import { h, toast, copyText } from './app.js';
+import { h, mount, toast, copyText } from './app.js';
 import { renderMarkdown } from './md.js';
 import { highlightCpp } from './hl.js';
 
@@ -20,8 +20,8 @@ export async function renderPatterns(container, params = {}) {
   const id = params.path && params.path[0];
   if (id) {
     const entry = index.find(p => p.id === id);
-    if (!entry) { container.replaceChildren(h('h1', {}, 'Unknown pattern'), h('a', { href: '#/patterns' }, '← Patterns')); return; }
-    if (!entry.ready) { container.replaceChildren(h('a', { href: '#/patterns', class: 'small' }, '← Patterns'), h('h1', {}, entry.name), h('div', { class: 'card' }, h('p', { class: 'muted' }, 'Content for this pattern is being authored. Cue words so far: ', entry.cues.join(', '), '.'))); return; }
+    if (!entry) { mount(container, h('h1', {}, 'Unknown pattern'), h('a', { href: '#/patterns' }, '← Patterns')); return; }
+    if (!entry.ready) { mount(container, h('a', { href: '#/patterns', class: 'small' }, '← Patterns'), h('h1', {}, entry.name), h('div', { class: 'card' }, h('p', { class: 'muted' }, 'Content for this pattern is being authored. Cue words so far: ', entry.cues.join(', '), '.'))); return; }
     return renderDetail(container, await loadPattern(id), params.depth || 'oneLiner');
   }
 
@@ -38,7 +38,7 @@ export async function renderPatterns(container, params = {}) {
   };
   q.addEventListener('input', draw);
   draw();
-  container.replaceChildren(
+  mount(container, 
     h('h1', {}, 'Patterns'),
     h('p', { class: 'muted' }, 'Read the cue words first. Recognition = statement words → pattern. Then the twist: how is this problem different from the canonical one?'),
     h('div', { class: 'field' }, q),
@@ -59,7 +59,7 @@ function renderDetail(container, p, depth) {
 
   const section = (title, items, render) => items && items.length ? h('div', { class: 'card' }, h('h3', {}, title), h('ul', { style: 'padding-left:1.2rem;margin:.3rem 0' }, ...items.map(render))) : null;
 
-  container.replaceChildren(
+  mount(container, 
     h('a', { href: '#/patterns', class: 'small' }, '← Patterns'),
     h('h1', {}, p.name),
     h('div', {}, ...p.cues.map(c => h('span', { class: 'tag' }, c))),

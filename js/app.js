@@ -3,6 +3,10 @@ import { db } from './db.js';
 import { renderDrill } from './drill.js';
 import { renderLog } from './log.js';
 import { renderPatterns } from './patterns.js';
+import { renderRecall, dueCards } from './recall.js';
+import { renderContests } from './contests.js';
+import { renderMock } from './mock.js';
+import { todayPlan } from './schedule.js';
 
 export const INTERVIEW_DATE_KEY = 'interviewDate';
 const DEFAULT_INTERVIEW = '2026-10-24';
@@ -36,6 +40,10 @@ export function h(tag, attrs = {}, ...children) {
   return el;
 }
 
+export function mount(el, ...kids) {
+  el.replaceChildren(...kids.flat().filter(c => c != null && c !== false));
+}
+
 export function fmtSecs(s) {
   s = Math.max(0, Math.round(s));
   const m = Math.floor(s / 60), r = s % 60;
@@ -56,25 +64,13 @@ export async function copyText(text) {
   }
 }
 
-function comingSoon(title, what) {
-  return () => {
-    view.replaceChildren(
-      h('h1', {}, title),
-      h('div', { class: 'card' },
-        h('p', { class: 'muted' }, `${what} ships in build session 2.`),
-        h('p', {}, 'Until then: ', h('a', { href: '#/drill' }, 'run a drill'), ' or ',
-          h('a', { href: '#/patterns' }, 'read a pattern'), '.'))
-    );
-  };
-}
-
 const routes = {
   today: renderToday,
   drill: (params) => renderDrill(view, params),
   patterns: (params) => renderPatterns(view, params),
-  recall: comingSoon('Recall', 'Spaced-repetition recall cards'),
-  contests: comingSoon('Contests', 'The latest weekly/biweekly contest feed'),
-  mock: comingSoon('Mock', 'The 45-minute mock interview flow'),
+  recall: () => renderRecall(view),
+  contests: () => renderContests(view),
+  mock: () => renderMock(view),
   log: (params) => renderLog(view, params),
 };
 
@@ -102,24 +98,24 @@ async function route() {
 }
 
 async function renderToday() {
-  const drills = await db.all('drills');
+  const [drills, mocks, due] = await Promise.all([db.all('drills'), db.all('mocks'), dueCards(99)]);
   const todayStr = new Date().toISOString().slice(0, 10);
-  const doneToday = drills.filter(d => d.date === todayStr);
-  const streak = computeStreak(drills);
+  const drillsToday = drills.filter(d => d.date === todayStr).length;
+  const mocksToday = mocks.filter(m => m.date === todayStr).length;
+  const streak = computeStreak(drills.concat(mocks));
+  const plan = await todayPlan(due.length, drillsToday, mocksToday);
   view.replaceChildren(
-    h('h1', {}, 'Today'),
-    h('p', { class: 'muted' }, new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })),
-    h('div', { class: 'grid cols-3' },
-      h('div', { class: 'card' }, h('h3', {}, 'Drill'),
-        h('p', {}, doneToday.length ? `${doneToday.length} done today.` : 'One timed derivation, protocol enforced.'),
-        h('a', { class: 'btn primary', href: '#/drill' }, doneToday.length ? 'Another drill' : 'Start drill')),
-      h('div', { class: 'card' }, h('h3', {}, 'Recall'),
-        h('p', { class: 'muted' }, 'Cards arrive in session 2. For now, pick a pattern and try its canonical problem from memory.'),
-        h('a', { class: 'btn', href: '#/patterns' }, 'Patterns')),
-      h('div', { class: 'card' }, h('h3', {}, 'Streak'),
-        h('p', {}, h('span', { class: 'timer' }, String(streak)), ' day', streak === 1 ? '' : 's'),
-        h('a', { class: 'btn', href: '#/log' }, 'Open log')),
-    ),
+    h('div', { class: 'row between' }, h('h1', {}, 'Today'), h('span', { class: 'pill accent' }, `Week ${plan.weekNo} · day ${plan.dayIdx}`)),
+    h('p', { class: 'muted' }, new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' }), ' · ', plan.focus),
+    h('div', { class: 'card' }, ...plan.tasks.map(t => h('div', { class: 'row', style: 'padding:.45rem 0;border-bottom:1px solid var(--line)' },
+      h('span', { class: 'step-num', style: t.done ? 'background:var(--ok);color:#fff' : '' }, t.done ? '✓' : ''),
+      h('span', { style: t.done ? 'text-decoration:line-through;color:var(--fg-3)' : '' }, t.label),
+      h('span', { class: 'spacer' }),
+      t.done ? null : h('a', { class: 'btn sm primary', href: t.href }, 'Go')))),
+    h('div', { class: 'grid cols-3', style: 'margin-top:1rem' },
+      h('div', { class: 'card' }, h('h3', {}, 'Streak'), h('p', {}, h('span', { class: 'timer' }, String(streak)), ' day', streak === 1 ? '' : 's')),
+      h('div', { class: 'card' }, h('h3', {}, 'Drills'), h('p', {}, h('span', { class: 'timer' }, String(drills.length)), ' total · ', h('a', { href: '#/log' }, 'log'))),
+      h('div', { class: 'card' }, h('h3', {}, 'Mocks'), h('p', {}, h('span', { class: 'timer' }, String(mocks.length)), mocks.length ? ` · last ${mocks[mocks.length - 1].score}/15` : ''))),
     h('h2', {}, 'The protocol'),
     h('div', { class: 'card' }, h('ol', {},
       h('li', {}, h('b', {}, 'Restate'), ' in one sentence, your words.'),
