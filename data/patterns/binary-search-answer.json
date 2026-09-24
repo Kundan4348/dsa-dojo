@@ -1,7 +1,17 @@
 {
   "id": "binary-search-answer",
   "name": "Binary search on the answer",
-  "cues": ["minimum possible maximum", "minimize the largest", "smallest k such that", "capacity", "speed", "days to finish", "can we do it with X?"],
+  "cues": [
+    "minimum possible maximum",
+    "minimize the largest",
+    "smallest k such that",
+    "capacity",
+    "speed",
+    "days to finish",
+    "can we do it with X?"
+  ],
+  "plain": "You can't compute the answer directly, but you can cheaply check a guess: 'could we finish in 5 days?' 'could every box carry at most 10?'. If a guess works, every bigger guess also works — so the answers form a yes/no boundary and binary search finds it in log steps.",
+  "whenToUse": "you see 'minimise the maximum', 'smallest speed/capacity/days such that…', and checking a fixed value is easy.",
   "invariant": "There is a predicate feasible(x) that is monotone: if x works, every larger x works (or every smaller, depending on direction). Binary search maintains lo = a value known to fail and hi = a value known to work; the answer is the boundary between them.",
   "oneLiner": "When you cannot compute the answer directly but you can cheaply *check* a candidate — and checking is monotone — search the candidate space instead of the input.",
   "intuition": "## The waste in the brute force\n\nBrute force for 'minimum ship capacity to deliver all packages in D days': try capacity 1, 2, 3, … until one works. Each check is O(n) greedy; the search is O(sum). The waste: if capacity 100 fails, so do 1..99 — we tested them anyway. If 500 works, so does everything above — irrelevant.\n\n## The object\n\nA **yes/no function** `feasible(x)` and the observation that its output looks like `NNNNNYYYYY` over the sorted candidate range. Binary search finds the first Y in O(log range) calls. Total: O(n log range).\n\n## The three questions to answer before coding\n\n1. **What is the candidate?** The thing the problem asks to minimise/maximise (capacity, speed, days, distance, max load). Not an index into the array.\n2. **What is `feasible(x)`?** Usually a greedy simulation: 'with capacity x, how many days do I need? Is it ≤ D?'\n3. **Which way is it monotone?** Bigger capacity → fewer days → 'works' stays working. So the feasible region is an upper interval; we want its left edge.\n\n## Bounds\n\n`lo` = the smallest value that could possibly be the answer (often `max(a)` — a ship must carry the heaviest single item). `hi` = a value that certainly works (often `sum(a)` — one day). Wrong bounds are the #1 bug: `lo` too low wastes iterations harmlessly, but `hi` too low makes the answer unreachable.\n\n## Recognising it\n\n'Minimise the maximum …', 'maximise the minimum …', 'smallest X such that …', 'how fast/large must … be so that … within …'. Also: the answer's range is huge (1e9) but the check is cheap. If you catch yourself thinking 'I could test whether 37 works', this is the pattern.",
@@ -9,10 +19,26 @@
   "template": "// Smallest x in [lo, hi] with feasible(x) == true, given feasible is monotone N...NY...Y.\n// Precondition: feasible(hi) is true. Returns hi if nothing smaller works.\ntemplate <class F>\nlong long firstTrue(long long lo, long long hi, F feasible) {\n    while (lo < hi) {\n        long long mid = lo + (hi - lo) / 2;      // rounds down → never re-tests hi\n        if (feasible(mid)) hi = mid;             // mid works: answer is mid or smaller\n        else lo = mid + 1;                       // mid fails: answer is strictly larger\n    }\n    return lo;\n}\n\n// Example: minimum ship capacity to deliver all weights within D days.\nint shipWithinDays(const vector<int>& w, int D) {\n    long long lo = *max_element(w.begin(), w.end());   // must carry the heaviest item\n    long long hi = accumulate(w.begin(), w.end(), 0LL); // one trip carries everything\n    auto feasible = [&](long long cap) {\n        int days = 1; long long load = 0;\n        for (int x : w) {\n            if (load + x > cap) { ++days; load = 0; }   // start a new day\n            load += x;\n        }\n        return days <= D;\n    };\n    return (int)firstTrue(lo, hi, feasible);\n}\n\n// For 'LARGEST x that works' (Y...YN...N), flip: if (feasible(mid)) lo = mid; else hi = mid - 1;\n// and compute mid = lo + (hi - lo + 1) / 2 (round UP) so the loop terminates.",
   "templateNotes": "Two stable shapes only: **first true** (round mid down, `hi = mid`) and **last true** (round mid up, `lo = mid`). Memorise both; never improvise a third.",
   "canonical": [
-    { "title": "Koko Eating Bananas", "slug": "koko-eating-bananas", "difficulty": "Medium" },
-    { "title": "Capacity To Ship Packages Within D Days", "slug": "capacity-to-ship-packages-within-d-days", "difficulty": "Medium" },
-    { "title": "Split Array Largest Sum", "slug": "split-array-largest-sum", "difficulty": "Hard" },
-    { "title": "Minimize Max Distance to Gas Station", "slug": "minimize-max-distance-to-gas-station", "difficulty": "Hard" }
+    {
+      "title": "Koko Eating Bananas",
+      "slug": "koko-eating-bananas",
+      "difficulty": "Medium"
+    },
+    {
+      "title": "Capacity To Ship Packages Within D Days",
+      "slug": "capacity-to-ship-packages-within-d-days",
+      "difficulty": "Medium"
+    },
+    {
+      "title": "Split Array Largest Sum",
+      "slug": "split-array-largest-sum",
+      "difficulty": "Hard"
+    },
+    {
+      "title": "Minimize Max Distance to Gas Station",
+      "slug": "minimize-max-distance-to-gas-station",
+      "difficulty": "Hard"
+    }
   ],
   "twists": [
     "**Maximise the minimum** (Magnetic Force Between Two Balls, Aggressive Cows): feasible region is a lower interval → use the 'last true' shape.",

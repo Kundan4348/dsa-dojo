@@ -1,7 +1,17 @@
 {
   "id": "sliding-window",
   "name": "Sliding window",
-  "cues": ["longest substring", "shortest subarray", "at most k distinct", "minimum window", "contiguous", "without repeating", "sum at least / at most"],
+  "cues": [
+    "longest substring",
+    "shortest subarray",
+    "at most k distinct",
+    "minimum window",
+    "contiguous",
+    "without repeating",
+    "sum at least / at most"
+  ],
+  "plain": "Two pointers that both only move right. Extend the right edge one element at a time; the moment the window breaks the rule (too many distinct letters, sum too big…), move the left edge right until it obeys again. After every step you can read off a candidate answer.",
+  "whenToUse": "the answer is a contiguous stretch (substring / subarray) that must be the longest or shortest one satisfying a condition that only gets harder as the window grows.",
   "invariant": "The window [l, r] always satisfies the condition (or is the smallest one that violates it, depending on the variant). r only moves right; l only moves right. Because neither pointer ever goes back, the total work is O(n) even though there is a while-loop inside the for-loop.",
   "oneLiner": "Grow the right edge one element at a time; whenever the window breaks the rule, shrink from the left until it holds again — and read off the answer after every step.",
   "intuition": "## The waste in the brute force\n\nBrute force for 'longest substring with at most k distinct characters': try every (l, r), count distinct, O(n²) or O(n³). The waste: the window (l, r+1) is (l, r) plus one character, but we recount from scratch. And once (l, r) is invalid, every (l, r') with r' > r is invalid too — yet we test them all.\n\n## The object\n\nA window with a running summary (a count map, a sum, a max via deque) that is updated **incrementally**: add one element at `r`, remove one at `l`. The condition on the window must be **monotone**: adding elements can only make it 'worse' (more distinct, bigger sum), removing can only make it 'better'. That is what lets `l` move only rightward.\n\n## Two shapes\n\n1. **Longest valid window** (at most k distinct, sum ≤ k with positives): for each `r`, shrink `l` until valid, then `best = max(best, r - l + 1)`.\n2. **Shortest valid window** (sum ≥ k with positives, minimum window containing all chars of t): for each `r`, while valid shrink `l` and record `best = min(best, r - l + 1)` *before* each shrink.\n\n## When it does NOT apply\n\nNegative numbers with a sum condition break monotonicity (adding can make the sum smaller). Then you need prefix sums + a monotonic deque (Shortest Subarray with Sum at Least K) — a different pattern.\n\n## Recognising it\n\n'Longest/shortest **contiguous** …' plus a condition that only gets harder as the window grows. If the question counts *all* valid subarrays, use the trick: number of valid windows ending at `r` is `r - l + 1` once the window is valid.",
@@ -9,10 +19,26 @@
   "template": "// LONGEST window satisfying a monotone condition: at most k distinct characters.\nint longestAtMostKDistinct(const string& s, int k) {\n    unordered_map<char,int> cnt;        // the incremental summary of the window\n    int best = 0;\n    for (int l = 0, r = 0; r < (int)s.size(); ++r) {\n        cnt[s[r]]++;                                   // 1. add the new right element\n        while ((int)cnt.size() > k) {                  // 2. window broke the rule → shrink\n            if (--cnt[s[l]] == 0) cnt.erase(s[l]);\n            ++l;\n        }\n        best = max(best, r - l + 1);                   // 3. window is valid here\n    }\n    return best;\n}\n\n// SHORTEST window with sum >= target (positives only).\nint shortestSumAtLeast(const vector<int>& a, int target) {\n    long long sum = 0;\n    int best = INT_MAX;\n    for (int l = 0, r = 0; r < (int)a.size(); ++r) {\n        sum += a[r];\n        while (sum >= target) {                        // valid → record, then try to shrink\n            best = min(best, r - l + 1);\n            sum -= a[l++];\n        }\n    }\n    return best == INT_MAX ? 0 : best;\n}\n\n// COUNT all valid windows: each valid (l, r) contributes r - l + 1 windows ending at r.\n// ... same loop as 'longest', replace best = max(...) with count += r - l + 1.",
   "templateNotes": "Read the three numbered lines as the template's skeleton: **add right, fix by shrinking left, read the answer**. Which of 'read' and 'shrink' comes first is the only difference between longest and shortest.",
   "canonical": [
-    { "title": "Longest Substring Without Repeating Characters", "slug": "longest-substring-without-repeating-characters", "difficulty": "Medium" },
-    { "title": "Minimum Size Subarray Sum", "slug": "minimum-size-subarray-sum", "difficulty": "Medium" },
-    { "title": "Minimum Window Substring", "slug": "minimum-window-substring", "difficulty": "Hard" },
-    { "title": "Subarrays with K Different Integers", "slug": "subarrays-with-k-different-integers", "difficulty": "Hard" }
+    {
+      "title": "Longest Substring Without Repeating Characters",
+      "slug": "longest-substring-without-repeating-characters",
+      "difficulty": "Medium"
+    },
+    {
+      "title": "Minimum Size Subarray Sum",
+      "slug": "minimum-size-subarray-sum",
+      "difficulty": "Medium"
+    },
+    {
+      "title": "Minimum Window Substring",
+      "slug": "minimum-window-substring",
+      "difficulty": "Hard"
+    },
+    {
+      "title": "Subarrays with K Different Integers",
+      "slug": "subarrays-with-k-different-integers",
+      "difficulty": "Hard"
+    }
   ],
   "twists": [
     "**Exactly k** instead of at most k: `exactly(k) = atMost(k) - atMost(k-1)`. Run the template twice.",

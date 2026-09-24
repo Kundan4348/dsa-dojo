@@ -45,7 +45,7 @@ export async function renderPatterns(container, params = {}) {
     list);
 }
 
-const DEPTHS = [['oneLiner', 'One-liner'], ['intuition', 'Intuition'], ['workedExample', 'Worked example'], ['template', 'Template']];
+const DEPTHS = [['oneLiner', 'In one line'], ['intuition', 'Why it works'], ['workedExample', 'Hand trace'], ['template', 'C++ template']];
 
 function renderDetail(container, p, depth) {
   const body = h('div', { class: 'md' });
@@ -64,7 +64,9 @@ function renderDetail(container, p, depth) {
     h('h1', {}, p.name),
     h('div', {}, ...p.cues.map(c => h('span', { class: 'tag' }, c))),
     h('div', { class: 'card', style: 'margin-top:1rem' },
-      h('h3', {}, 'Invariant'), h('p', {}, p.invariant),
+      h('h3', {}, 'In plain words'), h('p', { style: 'font-size:1.05rem' }, p.plain || p.oneLiner),
+      p.whenToUse ? h('p', { class: 'small' }, h('b', {}, 'Reach for it when: '), p.whenToUse) : null,
+      h('h3', { style: 'margin-top:.8rem' }, 'The one rule that must stay true (the invariant)'), h('p', { class: 'small' }, p.invariant),
       h('div', { class: 'row', style: 'margin-top:.6rem' },
         h('button', { class: 'btn sm', onClick: async () => toast((await copyText(`Explain the "${p.name}" pattern to me from scratch with a small example, then ask me one question to check I got it. Do not give me a LeetCode solution.`)) ? 'Copied — paste to Kiro.' : 'Copy failed.') }, 'Explain → Kiro'))),
     h('h2', {}, 'Explanation'), tabs, h('div', { class: 'card' }, body),

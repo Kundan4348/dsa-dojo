@@ -3,7 +3,7 @@
     "id": "prefix-sum-hash",
     "name": "Prefix sums + hash",
     "ready": true,
-    "summary": "Turn 'sum/count of subarrays' into a difference of two prefix values.",
+    "summary": "Answer 'sum of any range' instantly by storing running totals; count ranges with a target sum using a hash map.",
     "cues": [
       "subarray sum",
       "count subarrays",
@@ -17,7 +17,7 @@
     "id": "monotonic-stack",
     "name": "Monotonic stack",
     "ready": true,
-    "summary": "Nearest greater/smaller element on either side in one pass.",
+    "summary": "For every element, find the nearest bigger (or smaller) one to its left or right, all in a single pass.",
     "cues": [
       "next greater",
       "nearest smaller",
@@ -31,7 +31,7 @@
     "id": "two-pointers-sorted",
     "name": "Two pointers on sorted data",
     "ready": true,
-    "summary": "Shrink a pair search from O(n²) to O(n) using sorted order.",
+    "summary": "Find a pair (or shrink a range) in sorted data by walking one pointer from each end toward the middle.",
     "cues": [
       "sorted",
       "pair with sum",
@@ -45,7 +45,7 @@
     "id": "sliding-window",
     "name": "Sliding window",
     "ready": true,
-    "summary": "Longest/shortest contiguous window satisfying a monotone condition.",
+    "summary": "Find the longest or shortest stretch of consecutive elements that obeys a rule, by growing the right edge and shrinking the left.",
     "cues": [
       "longest substring",
       "at most k distinct",
@@ -58,7 +58,7 @@
     "id": "binary-search-answer",
     "name": "Binary search on the answer",
     "ready": true,
-    "summary": "When 'can we do it with X?' is monotone in X, search X.",
+    "summary": "When you can't compute the answer but can check 'is X good enough?', binary-search over X itself.",
     "cues": [
       "minimum possible maximum",
       "minimize the largest",
@@ -72,7 +72,7 @@
     "id": "bfs-grid",
     "name": "BFS shortest path",
     "ready": true,
-    "summary": "Unweighted shortest distance, layer by layer; multi-source when many starts.",
+    "summary": "Fewest steps from a start to a target when every step costs the same: explore in rings, first arrival wins.",
     "cues": [
       "shortest path",
       "minimum steps",
@@ -85,7 +85,7 @@
     "id": "dfs-backtracking",
     "name": "DFS + backtracking",
     "ready": true,
-    "summary": "Enumerate choices, undo on return; prune early.",
+    "summary": "List every valid combination by making one choice at a time, going deeper, and undoing the choice on the way back.",
     "cues": [
       "all combinations",
       "all permutations",
@@ -98,8 +98,8 @@
   {
     "id": "union-find",
     "name": "Union-find",
-    "ready": false,
-    "summary": "Dynamic connectivity and grouping with near-O(1) merges.",
+    "ready": true,
+    "summary": "Keep track of which items belong to the same group while groups keep merging; 'are these two connected?' in near O(1).",
     "cues": [
       "connected components",
       "groups",
@@ -112,8 +112,8 @@
   {
     "id": "topological-sort",
     "name": "Topological sort",
-    "ready": false,
-    "summary": "Order tasks under prerequisites; detect cycles.",
+    "ready": true,
+    "summary": "Put tasks in an order that respects 'A before B' rules, and spot when the rules contradict each other (a cycle).",
     "cues": [
       "prerequisites",
       "dependencies",
@@ -126,7 +126,7 @@
     "id": "dijkstra",
     "name": "Dijkstra",
     "ready": false,
-    "summary": "Shortest path with non-negative weights via a min-heap.",
+    "summary": "Cheapest route between points when each road has its own positive cost: always extend the cheapest known route next.",
     "cues": [
       "weighted",
       "minimum cost path",
@@ -138,8 +138,8 @@
   {
     "id": "heap-topk",
     "name": "Heap / top-k",
-    "ready": false,
-    "summary": "Keep the k best seen so far; merge streams.",
+    "ready": true,
+    "summary": "Keep only the k best things you've seen so far (or always grab the smallest of many streams) with a priority queue.",
     "cues": [
       "k largest",
       "k most frequent",
@@ -151,8 +151,8 @@
   {
     "id": "intervals",
     "name": "Intervals",
-    "ready": false,
-    "summary": "Sort by start; sweep with the current end or a heap of ends.",
+    "ready": true,
+    "summary": "Sort time ranges by start, then sweep left to right merging, counting overlaps, or picking non-overlapping ones.",
     "cues": [
       "intervals",
       "meeting rooms",
@@ -166,7 +166,7 @@
     "id": "dp-1d",
     "name": "1-D DP",
     "ready": true,
-    "summary": "State = position (and one small extra); answer builds left to right.",
+    "summary": "Solve 'best answer for the first i elements' using the answers for slightly shorter prefixes, filling a table left to right.",
     "cues": [
       "maximum sum not adjacent",
       "number of ways",
@@ -179,7 +179,7 @@
     "id": "dp-grid",
     "name": "Grid / 2-D DP",
     "ready": false,
-    "summary": "State = (i, j); transitions from neighbours or from two strings' prefixes.",
+    "summary": "Two-dimensional table: the answer for cell (i, j) comes from its neighbours — grids, or two strings compared prefix by prefix.",
     "cues": [
       "two strings",
       "edit distance",
@@ -192,7 +192,7 @@
     "id": "dp-knapsack",
     "name": "Knapsack-style DP",
     "ready": false,
-    "summary": "Choose items under a capacity; reachability of sums.",
+    "summary": "Pick items under a limit (weight, budget, target sum): a table over 'how much capacity is left' tells you what is reachable.",
     "cues": [
       "coin change",
       "target sum",
@@ -205,7 +205,7 @@
     "id": "dp-interval",
     "name": "DP on intervals",
     "ready": false,
-    "summary": "dp[l][r] from splitting at k; last-removed element trick.",
+    "summary": "Best way to process a range [l, r] by choosing which element is handled last, then solving the two sides.",
     "cues": [
       "burst",
       "remove and merge",
@@ -218,7 +218,7 @@
     "id": "dp-bitmask",
     "name": "Bitmask DP",
     "ready": false,
-    "summary": "State = set of visited/used items when n ≤ ~20.",
+    "summary": "When n ≤ ~20, represent 'which items are used so far' as bits of an integer and DP over all 2^n subsets.",
     "cues": [
       "n ≤ 20",
       "visit all",
@@ -231,7 +231,7 @@
     "id": "trie",
     "name": "Trie",
     "ready": false,
-    "summary": "Prefix tree for many-word lookups and prefix matching.",
+    "summary": "A tree of letters so that looking up words, prefixes or 'does any word start with…' is proportional to word length, not dictionary size.",
     "cues": [
       "prefix",
       "dictionary",
@@ -245,7 +245,7 @@
     "id": "linked-list",
     "name": "Linked list pointers",
     "ready": false,
-    "summary": "Slow/fast pointers, reversal in place, dummy head.",
+    "summary": "Slow/fast pointers to find middles and cycles, in-place reversal, and a dummy head so the first node is never a special case.",
     "cues": [
       "linked list",
       "cycle",
@@ -257,8 +257,8 @@
   {
     "id": "tree-recursion",
     "name": "Trees: recursion that returns",
-    "ready": false,
-    "summary": "Each call returns a small summary of its subtree; combine at the parent.",
+    "ready": true,
+    "summary": "Each recursive call returns a tiny summary of its subtree (height, sum, best path); the parent combines the children's summaries.",
     "cues": [
       "binary tree",
       "path sum",
@@ -272,7 +272,7 @@
     "id": "greedy-sort",
     "name": "Greedy + sort",
     "ready": false,
-    "summary": "Sort by the right key, then take locally best; prove with exchange argument.",
+    "summary": "Sort by the right key, then take the locally best choice every time; justify it by showing swapping never helps.",
     "cues": [
       "minimum number of",
       "maximize count",
@@ -286,7 +286,7 @@
     "id": "fenwick-segment",
     "name": "Fenwick / segment tree",
     "ready": false,
-    "summary": "Prefix queries with point updates in O(log n); offline sort + count.",
+    "summary": "Range queries mixed with updates in O(log n); also the standard tool for 'count smaller elements after me'.",
     "cues": [
       "count smaller after self",
       "range sum with updates",
@@ -299,7 +299,7 @@
     "id": "divide-conquer",
     "name": "Divide and conquer",
     "ready": false,
-    "summary": "Solve halves, count cross pairs at the merge.",
+    "summary": "Split in half, solve each half, then count the pairs that straddle the middle during the merge (like merge sort).",
     "cues": [
       "count pairs i<j with condition",
       "inversions",
@@ -312,7 +312,7 @@
     "id": "design-hashing",
     "name": "Design / hashing",
     "ready": false,
-    "summary": "O(1) operations by combining a hash map with a list or linked list.",
+    "summary": "Build data structures with O(1) operations by pairing a hash map with an array or a doubly linked list (LRU, O(1) getRandom).",
     "cues": [
       "design",
       "O(1) insert delete getRandom",
@@ -326,7 +326,7 @@
     "id": "math-counting",
     "name": "Math / counting",
     "ready": false,
-    "summary": "Closed forms, modular arithmetic, parity, pigeonhole.",
+    "summary": "Closed-form formulas, modular arithmetic, parity and pigeonhole arguments that replace a loop with a calculation.",
     "cues": [
       "modulo 1e9+7",
       "count primes",

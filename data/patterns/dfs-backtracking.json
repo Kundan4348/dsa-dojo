@@ -1,7 +1,18 @@
 {
   "id": "dfs-backtracking",
   "name": "DFS + backtracking",
-  "cues": ["all combinations", "all permutations", "generate", "subsets", "place k things", "valid arrangements", "return every way", "n ≤ 15"],
+  "cues": [
+    "all combinations",
+    "all permutations",
+    "generate",
+    "subsets",
+    "place k things",
+    "valid arrangements",
+    "return every way",
+    "n ≤ 15"
+  ],
+  "plain": "Build a solution one decision at a time. Make a choice, go deeper, and when you come back undo that choice so the partial solution is exactly as it was. Stop going deeper the moment the partial solution can no longer be completed.",
+  "whenToUse": "you must list all combinations, permutations, subsets, or placements — or find one valid arrangement — and n is small enough that trying everything (with pruning) is acceptable.",
   "invariant": "`path` is exactly one partial solution, built by the choices made on the current recursion stack and nothing else. Every choice pushed before recursing is popped after — so when a call returns, `path` is byte-for-byte what it was when the call began.",
   "oneLiner": "Make a choice, recurse into the smaller problem, undo the choice — and prune the moment a partial solution cannot be completed.",
   "intuition": "## What it is really doing\n\nBacktracking is a DFS over an implicit **decision tree**. Each level is one decision (which element goes next, does element i go in or out, which column gets the queen in row r). A leaf is a complete candidate. The recursion stack *is* the current path, so you never store the tree.\n\n## The three-line body\n\n```\nfor each choice c available at this level:\n    apply c        (push, mark used, place)\n    recurse        (next level)\n    undo c         (pop, unmark, remove)\n```\n\nEverything else — the base case, the pruning — bolts onto this skeleton.\n\n## The two decisions that decide the shape\n\n1. **What does a level mean?** *Position* (permutations: level i picks what sits at index i) or *element* (subsets: level i decides whether element i is in). Combinations use a `start` index so each element is considered once and order does not matter.\n2. **What prunes?** A partial solution that already violates a constraint (queen attacked, sum exceeded with positives, remaining count too small). Pruning is what makes it fast enough; without it you are enumerating everything.\n\n## Duplicates\n\nIf the input has repeated values and you must not output repeated answers: sort, then at each level skip `a[i] == a[i-1]` when `a[i-1]` was *not used at this level* (`i > start` for combinations, `!used[i-1]` for permutations). This is the single most common bug and follow-up.\n\n## Recognising it\n\n'Return **all** …', 'generate every …', 'how many ways to place …' with small n (≤ 15–20). If the question wants a *count* only and n is large, that is DP, not backtracking. If it wants an *optimum* over sequences, consider DP or greedy first.",
@@ -9,10 +20,26 @@
   "template": "// Subsets / combinations (order does not matter): use a start index.\nvoid subsets(const vector<int>& a, int start, vector<int>& path, vector<vector<int>>& out) {\n    out.push_back(path);                              // every node of the tree is an answer\n    for (int i = start; i < (int)a.size(); ++i) {\n        if (i > start && a[i] == a[i-1]) continue;    // skip duplicates (a must be sorted)\n        path.push_back(a[i]);                         // choose\n        subsets(a, i + 1, path, out);                 // explore\n        path.pop_back();                              // un-choose\n    }\n}\n\n// Permutations (order matters): track used[].\nvoid permute(const vector<int>& a, vector<bool>& used, vector<int>& path, vector<vector<int>>& out) {\n    if (path.size() == a.size()) { out.push_back(path); return; }   // leaf\n    for (int i = 0; i < (int)a.size(); ++i) {\n        if (used[i]) continue;\n        if (i > 0 && a[i] == a[i-1] && !used[i-1]) continue;        // duplicate guard\n        used[i] = true; path.push_back(a[i]);\n        permute(a, used, path, out);\n        path.pop_back(); used[i] = false;\n    }\n}\n\n// Constraint placement (N-Queens): one decision per row, prune with O(1) attack checks.\nvoid queens(int r, int n, vector<int>& col, vector<bool>& usedCol, vector<bool>& d1, vector<bool>& d2, int& count) {\n    if (r == n) { ++count; return; }\n    for (int c = 0; c < n; ++c) {\n        if (usedCol[c] || d1[r + c] || d2[r - c + n - 1]) continue;  // prune\n        usedCol[c] = d1[r + c] = d2[r - c + n - 1] = true; col[r] = c;\n        queens(r + 1, n, col, usedCol, d1, d2, count);\n        usedCol[c] = d1[r + c] = d2[r - c + n - 1] = false;\n    }\n}",
   "templateNotes": "Every `push`/`mark` line has a mirror `pop`/`unmark` line after the recursive call. If you cannot pair them up visually, the invariant is broken.",
   "canonical": [
-    { "title": "Subsets II", "slug": "subsets-ii", "difficulty": "Medium" },
-    { "title": "Permutations II", "slug": "permutations-ii", "difficulty": "Medium" },
-    { "title": "Combination Sum II", "slug": "combination-sum-ii", "difficulty": "Medium" },
-    { "title": "N-Queens", "slug": "n-queens", "difficulty": "Hard" }
+    {
+      "title": "Subsets II",
+      "slug": "subsets-ii",
+      "difficulty": "Medium"
+    },
+    {
+      "title": "Permutations II",
+      "slug": "permutations-ii",
+      "difficulty": "Medium"
+    },
+    {
+      "title": "Combination Sum II",
+      "slug": "combination-sum-ii",
+      "difficulty": "Medium"
+    },
+    {
+      "title": "N-Queens",
+      "slug": "n-queens",
+      "difficulty": "Hard"
+    }
   ],
   "twists": [
     "**Count only, large n** → this is DP with memoisation over the state, not enumeration (Unique Paths, Target Sum).",

@@ -1,7 +1,17 @@
 {
   "id": "prefix-sum-hash",
   "name": "Prefix sums + hash",
-  "cues": ["subarray sum", "count subarrays", "equals k", "divisible by k", "many [l,r] queries", "balance / running total", "same number of 0s and 1s"],
+  "cues": [
+    "subarray sum",
+    "count subarrays",
+    "equals k",
+    "divisible by k",
+    "many [l,r] queries",
+    "balance / running total",
+    "same number of 0s and 1s"
+  ],
+  "plain": "Keep a running total P[i] = sum of the first i numbers. Then the sum of any stretch from l to r is just P[r] - P[l], two lookups instead of a loop. If the question is 'how many stretches sum to k?', that turns into 'how many pairs of running totals differ by k?', and a hash map counts pairs in one pass.",
+  "whenToUse": "the statement talks about subarray sums, counts of subarrays with some sum property, or many 'sum between l and r' queries.",
   "invariant": "P[i] = sum of the first i elements. The sum of any subarray (l, r] is P[r] - P[l] — a property of two endpoints, not of the elements between them. Once you have P, 'sum of a range' costs O(1) and 'count of ranges with sum k' becomes 'count of pairs with P[r] - P[l] = k', which a hash map answers in one pass.",
   "oneLiner": "Replace 'the sum from l to r' with 'a difference of two running totals' — then a range question becomes a pair question, and pair questions are hash-map questions.",
   "intuition": "## The waste in the brute force\n\nBrute force for 'count subarrays with sum k': for every `l`, extend `r` and add up. O(n²). The waste: the sum of `a[l..r]` and the sum of `a[l..r+1]` share everything but one element, yet we recompute; worse, `a[l+1..r]` shares almost everything with `a[l..r]` and we recompute that too.\n\n## The object\n\nA single array `P` where `P[i]` is the sum of the first `i` elements (`P[0] = 0`). Now sum(l..r) = `P[r+1] - P[l]`. The sum of a range is no longer about the range's contents — it is about two numbers.\n\n## The second step: from pairs to a hash map\n\n'Count pairs `l < r` with `P[r] - P[l] = k`' — rewrite as `P[l] = P[r] - k`. Walk `r` left to right; at each `r`, ask the hash map *how many earlier prefixes equal `P[r] - k`*. Then record `P[r]`. Every earlier prefix is exactly one candidate `l`. This is the same trick as Two Sum.\n\n## The family\n\n- **Sum equals k** → map from prefix value to count.\n- **Sum divisible by k** → map from `prefix mod k` to count (pairs with equal remainder).\n- **Equal number of 0s and 1s** → treat 0 as −1, look for prefix pairs that are equal (k = 0).\n- **Longest subarray with sum k** → map from prefix value to its *first* index instead of its count.\n- **Many `[l, r]` range-sum queries, no updates** → just `P`, no hash map. (With updates → Fenwick tree.)\n\n## Recognising it\n\nThe question is about a *contiguous* range and the property is *additive* (sum, count of something, balance). If the property is not additive — max, min, distinct count — prefix sums do not apply and you need a different object (monotonic deque, sliding window with a map).",
@@ -9,10 +19,26 @@
   "template": "// Count subarrays with sum exactly k. O(n) time, O(n) space.\nint subarraySum(const vector<int>& a, int k) {\n    unordered_map<long long, int> seen;   // prefix value -> how many times seen\n    seen[0] = 1;                          // the empty prefix, so subarrays starting at 0 count\n    long long prefix = 0;\n    int count = 0;\n    for (int x : a) {\n        prefix += x;\n        auto it = seen.find(prefix - k);  // earlier prefix that makes this range sum k\n        if (it != seen.end()) count += it->second;\n        seen[prefix]++;                   // record AFTER the lookup (l must be < r)\n    }\n    return count;\n}\n\n// Range-sum queries with no updates: build once, answer each in O(1).\nvector<long long> buildPrefix(const vector<int>& a) {\n    vector<long long> P(a.size() + 1, 0);\n    for (size_t i = 0; i < a.size(); ++i) P[i + 1] = P[i] + a[i];\n    return P;                             // sum(l..r) inclusive = P[r+1] - P[l]\n}",
   "templateNotes": "Use `long long` for the prefix: `n = 1e5` values of `1e4` already overflow `int`. Insert into the map **after** the lookup — otherwise `k = 0` counts the empty subarray.",
   "canonical": [
-    { "title": "Subarray Sum Equals K", "slug": "subarray-sum-equals-k", "difficulty": "Medium" },
-    { "title": "Subarray Sums Divisible by K", "slug": "subarray-sums-divisible-by-k", "difficulty": "Medium" },
-    { "title": "Contiguous Array", "slug": "contiguous-array", "difficulty": "Medium" },
-    { "title": "Range Sum Query - Immutable", "slug": "range-sum-query-immutable", "difficulty": "Easy" }
+    {
+      "title": "Subarray Sum Equals K",
+      "slug": "subarray-sum-equals-k",
+      "difficulty": "Medium"
+    },
+    {
+      "title": "Subarray Sums Divisible by K",
+      "slug": "subarray-sums-divisible-by-k",
+      "difficulty": "Medium"
+    },
+    {
+      "title": "Contiguous Array",
+      "slug": "contiguous-array",
+      "difficulty": "Medium"
+    },
+    {
+      "title": "Range Sum Query - Immutable",
+      "slug": "range-sum-query-immutable",
+      "difficulty": "Easy"
+    }
   ],
   "twists": [
     "**Directional costs** (this week's closest-hop problem): the cost of crossing gap `i` depends on the direction, so you keep **two** prefix arrays, one per direction, and each query subtracts in one of them.",

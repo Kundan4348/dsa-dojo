@@ -1,5 +1,5 @@
 // sw.js — precache the shell; network-first for data/ so authored content updates without a release.
-const CACHE = 'dojo-v2';
+const CACHE = 'dojo-v3';
 const SHELL = [
   './', './index.html', './manifest.json', './css/app.css',
   './js/app.js', './js/db.js', './js/drill.js', './js/log.js', './js/patterns.js', './js/md.js', './js/hl.js',

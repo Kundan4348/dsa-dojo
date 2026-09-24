@@ -1,7 +1,17 @@
 {
   "id": "monotonic-stack",
   "name": "Monotonic stack",
-  "cues": ["next greater", "nearest smaller", "how many days until", "span", "histogram", "visible / blocked by taller", "first element to the right that…"],
+  "cues": [
+    "next greater",
+    "nearest smaller",
+    "how many days until",
+    "span",
+    "histogram",
+    "visible / blocked by taller",
+    "first element to the right that…"
+  ],
+  "plain": "You walk through the array once, carrying a stack of elements that are still waiting to find out 'who is the first bigger one after me?'. Whenever a new element is bigger than the one on top of the stack, the top has found its answer — pop it and write the answer down. Because each element is pushed once and popped at most once, the whole thing is linear.",
+  "whenToUse": "the question is 'for each element, what is the nearest element to the left/right that is bigger/smaller?' — or anything built from that, like histogram rectangles or 'how far can I see'.",
   "invariant": "The stack holds indices whose values are strictly decreasing from bottom to top. When a new value pops an index, the new value is that index's next greater element — and it is found exactly once, so the whole pass is O(n).",
   "oneLiner": "Walk the array once; keep a stack of elements still waiting for their answer; the moment an element arrives that beats the top, the top has found its answer — pop it and record.",
   "intuition": "## The waste in the brute force\n\nBrute force: for every `i`, scan right until you find something bigger. O(n²). What is wasted? When `i` scans past `j` because `a[j] <= a[i]`, then later `i+1` (if `a[i+1] <= a[i]`) will scan past `j` **again**. Elements that are smaller than something to their left are dead weight for everyone further left.\n\n## The object that removes it\n\nKeep only the elements that are still **waiting** for a bigger one. Newer waiting elements are always to the right of older ones, and — crucially — smaller than them (if a newer one were bigger, the older one would have stopped waiting). So the waiting list is sorted decreasing, and only its top can be resolved by the next value. That waiting list is the stack.\n\n## Why it is O(n)\n\nEvery index is pushed once and popped at most once. The inner `while` looks nested but the total number of pops over the whole run is at most n.\n\n## Recognising it\n\nThe statement asks, for each position, about the *first / nearest* element in one direction satisfying a comparison. Words: next greater, previous smaller, days until warmer, how far can I see, width of the largest rectangle.",
@@ -9,10 +19,26 @@
   "template": "// Next strictly greater element to the RIGHT, as an index (or -1).\n// Flip the comparison for 'smaller'; scan from the right for 'to the LEFT'.\nvector<int> nextGreater(const vector<int>& a) {\n    int n = a.size();\n    vector<int> ans(n, -1);\n    vector<int> st;                       // indices; a[st] strictly decreasing\n    for (int i = 0; i < n; ++i) {\n        while (!st.empty() && a[st.back()] < a[i]) {   // a[i] beats the top\n            ans[st.back()] = i;             // top has found its answer\n            st.pop_back();\n        }\n        st.push_back(i);                   // i now waits for its own answer\n    }\n    return ans;                            // leftovers stay -1\n}\n\n// Largest rectangle in a histogram: for each bar, nearest smaller on both sides.\n// width = right[i] - left[i] - 1, area = h[i] * width.\nlong long largestRectangle(const vector<int>& h) {\n    int n = h.size();\n    vector<int> left(n, -1), right(n, n), st;\n    for (int i = 0; i < n; ++i) {\n        while (!st.empty() && h[st.back()] >= h[i]) { right[st.back()] = i; st.pop_back(); }\n        left[i] = st.empty() ? -1 : st.back();\n        st.push_back(i);\n    }\n    long long best = 0;\n    for (int i = 0; i < n; ++i) best = max(best, 1LL * h[i] * (right[i] - left[i] - 1));\n    return best;\n}",
   "templateNotes": "Store **indices**, not values — you almost always need the distance or the position, and you can always read the value back as `a[st.back()]`.",
   "canonical": [
-    { "title": "Daily Temperatures", "slug": "daily-temperatures", "difficulty": "Medium" },
-    { "title": "Next Greater Element II", "slug": "next-greater-element-ii", "difficulty": "Medium" },
-    { "title": "Largest Rectangle in Histogram", "slug": "largest-rectangle-in-histogram", "difficulty": "Hard" },
-    { "title": "Sum of Subarray Minimums", "slug": "sum-of-subarray-minimums", "difficulty": "Medium" }
+    {
+      "title": "Daily Temperatures",
+      "slug": "daily-temperatures",
+      "difficulty": "Medium"
+    },
+    {
+      "title": "Next Greater Element II",
+      "slug": "next-greater-element-ii",
+      "difficulty": "Medium"
+    },
+    {
+      "title": "Largest Rectangle in Histogram",
+      "slug": "largest-rectangle-in-histogram",
+      "difficulty": "Hard"
+    },
+    {
+      "title": "Sum of Subarray Minimums",
+      "slug": "sum-of-subarray-minimums",
+      "difficulty": "Medium"
+    }
   ],
   "twists": [
     "**Farthest instead of nearest** (Maximum Width Ramp): the stack still holds the decreasing prefix candidates, but you then scan from the **right** with a pointer and pop while `a[j] >= a[top]`, recording `j - top`.",
