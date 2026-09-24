@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>DSA Dojo</title>
+  <meta name="description" content="Derivation-first DSA interview training: protocol drills, pattern recall, stall tracking." />
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Dojo" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/today" aria-label="DSA Dojo home">
+      <span class="brand-mark" aria-hidden="true">道</span>
+      <span class="brand-name">DSA Dojo</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#/today" data-route="today">Today</a>
+      <a href="#/drill" data-route="drill">Drill</a>
+      <a href="#/patterns" data-route="patterns">Patterns</a>
+      <a href="#/recall" data-route="recall">Recall</a>
+      <a href="#/contests" data-route="contests">Contests</a>
+      <a href="#/mock" data-route="mock">Mock</a>
+      <a href="#/log" data-route="log">Log</a>
+    </nav>
+    <div class="topbar-right">
+      <span id="days-left" class="pill" title="Days until interview"></span>
+    </div>
+  </header>
+
+  <main id="view" class="view" tabindex="-1" aria-live="polite"></main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

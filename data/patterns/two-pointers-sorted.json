@@ -1,0 +1,37 @@
+{
+  "id": "two-pointers-sorted",
+  "name": "Two pointers on sorted data",
+  "cues": ["sorted", "pair with sum", "closest pair", "remove duplicates in place", "merge two sorted", "container / water", "count pairs with sum ≤ k"],
+  "invariant": "Everything strictly left of `lo` and strictly right of `hi` has already been proven irrelevant to the answer. Each step moves exactly one pointer inward for a reason you can state in one sentence, so the pointers meet after at most n steps.",
+  "oneLiner": "On sorted data, one comparison at the two ends tells you which end can never be part of a better answer — discard it and never look back.",
+  "intuition": "## The waste in the brute force\n\nBrute force for 'is there a pair with sum k': all pairs, O(n²). The waste is that after sorting, comparing `a[lo] + a[hi]` to `k` tells you about **many** pairs at once, not one:\n\n- if the sum is too **small**, `a[lo]` paired with *anything* to the left of `hi` is even smaller → `lo` is finished, move it right;\n- if the sum is too **big**, `a[hi]` paired with anything right of `lo` is even bigger → `hi` is finished, move it left.\n\nEach comparison eliminates a whole row or column of the pair matrix. n eliminations, done.\n\n## The object\n\nTwo indices and a **one-sentence reason** for each move. If you cannot say why the discarded element can never be in a better answer, two pointers is the wrong tool (or you have not sorted by the right key).\n\n## The family\n\n- **Opposite ends, converging**: pair sum, 3Sum (fix one, two-pointer the rest), Container With Most Water (move the shorter wall — the taller one can only do better with a shorter partner if the width also shrinks, so it cannot help).\n- **Same direction, fast/slow**: remove duplicates in place, move zeros, partition — `slow` marks where the next kept element goes, `fast` scans.\n- **Two arrays**: merge sorted arrays, intersection, median of two sorted arrays (the pointer becomes a binary search when you need O(log)).\n- **Counting**: number of pairs with `a[lo] + a[hi] <= k` is `hi - lo` when the pair fits — all of `lo`'s partners up to `hi` fit.\n\n## Recognising it\n\nThe input is sorted (or sorting does not destroy the answer), and the question is about **pairs / two sequences / a partition**. If the question is about a *contiguous window* with a monotone condition, it is the sliding-window cousin — same two indices, both moving right.",
+  "workedExample": "## Two Sum II (sorted): `a = [1, 3, 4, 6, 8, 11]`, target `10`\n\n| lo | hi | a[lo]+a[hi] | vs 10 | reason for the move |\n|---|---|---|---|---|\n| 0 | 5 | 1+11 = 12 | too big | 11 with anything ≥ 1 is ≥ 12 → 11 is out, `hi--` |\n| 0 | 4 | 1+8 = 9 | too small | 1 with anything ≤ 8 is ≤ 9 → 1 is out, `lo++` |\n| 1 | 4 | 3+8 = 11 | too big | `hi--` |\n| 1 | 3 | 3+6 = 9 | too small | `lo++` |\n| 2 | 3 | 4+6 = 10 | found | indices (2, 3) |\n\nFive comparisons instead of fifteen pairs.\n\n## Container With Most Water: `h = [1, 8, 6, 2, 5, 4, 8, 3, 7]`\n\nStart `lo=0 (1)`, `hi=8 (7)`: area `min(1,7) * 8 = 8`. The shorter wall is `1`: any container using it is capped at height 1, and every other partner is closer → it can never beat 8. Move `lo`. Continue; the best is `min(8,7) * 7 = 49` at `lo=1, hi=8`. The rule 'move the shorter side' is the whole proof.\n\n**Boundary check:** two elements → one comparison. All equal values → every move is valid by either rule; make sure the loop is `while (lo < hi)` so it terminates.",
+  "template": "// Pair with exact sum in a sorted array; returns indices or {-1,-1}.\npair<int,int> pairWithSum(const vector<int>& a, long long target) {\n    int lo = 0, hi = (int)a.size() - 1;\n    while (lo < hi) {\n        long long s = (long long)a[lo] + a[hi];\n        if (s == target) return {lo, hi};\n        if (s < target) ++lo;          // a[lo] can't pair with anything left of hi to reach target\n        else --hi;                     // a[hi] can't pair with anything right of lo without overshooting\n    }\n    return {-1, -1};\n}\n\n// Count pairs lo<hi with a[lo] + a[hi] <= k in a sorted array.\nlong long countPairsAtMost(const vector<int>& a, long long k) {\n    long long cnt = 0;\n    int lo = 0, hi = (int)a.size() - 1;\n    while (lo < hi) {\n        if ((long long)a[lo] + a[hi] <= k) { cnt += hi - lo; ++lo; }  // all partners of lo up to hi fit\n        else --hi;\n    }\n    return cnt;\n}\n\n// Same-direction (fast/slow): remove duplicates in place, returns new length.\nint dedupInPlace(vector<int>& a) {\n    if (a.empty()) return 0;\n    int slow = 1;                                  // a[0..slow) is the kept, deduplicated prefix\n    for (int fast = 1; fast < (int)a.size(); ++fast)\n        if (a[fast] != a[slow - 1]) a[slow++] = a[fast];\n    return slow;\n}",
+  "templateNotes": "Write the **reason** for each pointer move as a comment. If you cannot fill that comment in, stop — the technique does not apply and you are about to write a wrong greedy.",
+  "canonical": [
+    { "title": "Two Sum II - Input Array Is Sorted", "slug": "two-sum-ii-input-array-is-sorted", "difficulty": "Medium" },
+    { "title": "3Sum", "slug": "3sum", "difficulty": "Medium" },
+    { "title": "Container With Most Water", "slug": "container-with-most-water", "difficulty": "Medium" },
+    { "title": "Remove Duplicates from Sorted Array", "slug": "remove-duplicates-from-sorted-array", "difficulty": "Easy" }
+  ],
+  "twists": [
+    "**Need indices from the original order** (Two Sum unsorted): sorting destroys them → use a hash map instead, or sort pairs (value, index).",
+    "**Three or four numbers**: fix the outer ones with loops, two-pointer the innermost pair; skip duplicates at every level to avoid repeated triplets.",
+    "**Closest, not exact** (3Sum Closest): track the best |sum − target| seen; the move rule is unchanged.",
+    "**Two arrays, need O(log(m+n))** (Median of Two Sorted Arrays): the pointer becomes a binary search over the cut position in the smaller array.",
+    "**Count instead of find** (Valid Triangle Number, pairs with sum ≤ k): when the pair fits, add `hi - lo` (or `k - i`) in one shot — do not enumerate.",
+    "**Condition is on a contiguous window** (Longest Substring…): both pointers move right → sliding window, a different pattern with a different invariant."
+  ],
+  "followups": [
+    "What if the array is not sorted — is sorting worth O(n log n) here, or is a hash map better?",
+    "How do you skip duplicate answers in 3Sum without a set?",
+    "Prove that moving the shorter wall never loses the optimal container.",
+    "Can you count pairs with sum in a range [lo, hi] using this twice?"
+  ],
+  "pitfalls": [
+    "Moving a pointer without a stated reason — the classic wrong greedy; every move needs 'X can never be in a better answer because…'.",
+    "`while (lo <= hi)` in a pair search lets `lo == hi` pair an element with itself.",
+    "Sorting when the problem needs original indices, then trying to recover them afterwards.",
+    "Forgetting to skip equal neighbours in 3Sum/4Sum → duplicate triplets in the output."
+  ]
+}
