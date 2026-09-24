@@ -1,0 +1,37 @@
+{
+  "id": "bfs-grid",
+  "name": "BFS shortest path",
+  "cues": ["shortest path", "minimum steps", "grid", "spread / rot / infect", "nearest 0", "fewest moves", "level by level", "unweighted"],
+  "invariant": "The queue holds nodes in non-decreasing distance order, and every node is enqueued at most once — the first time it is reached is via a shortest path. Processing the queue in layers means 'distance d' is fully finished before any 'distance d+1' node is popped.",
+  "oneLiner": "Expand outward one step at a time from the source(s); the first time you touch a cell is the shortest way to reach it — because all shorter paths were already explored.",
+  "intuition": "## The waste in the brute force\n\nBrute force for 'shortest path in a grid': DFS every route, keep the shortest. Exponential. The waste: DFS explores a length-50 path before checking whether a length-3 path exists, and it revisits cells via different routes.\n\n## The object\n\nA **queue** and a **visited set**. Visit in the order of discovery. Because every edge has weight 1, discovery order = distance order. Mark visited **when you enqueue**, not when you pop — otherwise a cell can be enqueued several times from several neighbours before any of them is processed, and the queue balloons.\n\n## Layer processing\n\nIf you need 'how many steps', process the queue in layers: record `qsize = q.size()` at the start of a level and pop exactly that many; then `steps++`. Or store the distance with each node. Both are fine; the layer form is what interviewers expect to see written cleanly.\n\n## Multi-source BFS\n\n'Distance from each cell to the nearest 0' (01 Matrix) or 'time until every orange rots' (Rotting Oranges): put **all** sources in the queue at distance 0 and run BFS once. Running BFS from every cell separately is O(n²·m²); multi-source is O(nm). Recognise the hint: 'nearest', 'all … simultaneously', 'each minute every …'.\n\n## When it is NOT BFS\n\n- Weighted edges → Dijkstra (weights 0/1 → 0-1 BFS with a deque).\n- 'Number of paths' or 'all paths' → DFS/backtracking or DP.\n- State is more than a position (position + keys collected, position + moves left) → BFS on the **state**, visited keyed by the full state.\n\n## Recognising it\n\n'Minimum number of moves/steps/minutes', 'shortest path', 'can X reach Y', anything on a grid or an implicit graph where every step costs the same.",
+  "workedExample": "## Rotting Oranges: grid (1 fresh, 2 rotten, 0 empty)\n\n```\n2 1 1\n1 1 0\n0 1 1\n```\n\nMulti-source: enqueue all rotten cells at minute 0 → `q = [(0,0)]`, fresh count = 6.\n\n| minute | popped this layer | newly rotten (enqueued) | fresh left |\n|---|---|---|---|\n| 0 | (0,0) | (0,1), (1,0) | 4 |\n| 1 | (0,1), (1,0) | (0,2), (1,1) | 2 |\n| 2 | (0,2), (1,1) | (2,1) | 1 |\n| 3 | (2,1) | (2,2) | 0 |\n| 4 | (2,2) | — | 0 |\n\nAnswer **4** minutes. Note the off-by-one: the last layer pops (2,2) and adds nothing, so count minutes only when a layer actually enqueues something — or return `minutes - 1` if you increment unconditionally. If `fresh > 0` at the end, return -1.\n\n## Boundary checks\n\n- No rotten oranges but some fresh → -1 immediately.\n- No fresh oranges → 0 (the queue drains in one layer, nothing spreads).\n- Single cell grid → 0 or -1, never a crash: check bounds on every neighbour.",
+  "template": "// Multi-source BFS on a grid, layer by layer. Returns the number of layers needed\n// to reach every reachable target cell, or -1 if some target is unreachable.\nint bfsLayers(vector<vector<int>>& g) {\n    int n = g.size(), m = g[0].size();\n    queue<pair<int,int>> q;\n    int fresh = 0;\n    for (int i = 0; i < n; ++i)\n        for (int j = 0; j < m; ++j) {\n            if (g[i][j] == 2) q.push({i, j});          // all sources at distance 0\n            else if (g[i][j] == 1) ++fresh;\n        }\n    const int dr[4] = {1, -1, 0, 0}, dc[4] = {0, 0, 1, -1};\n    int minutes = 0;\n    while (!q.empty() && fresh > 0) {\n        int layer = q.size();                          // process exactly one layer\n        for (int k = 0; k < layer; ++k) {\n            auto [r, c] = q.front(); q.pop();\n            for (int d = 0; d < 4; ++d) {\n                int nr = r + dr[d], nc = c + dc[d];\n                if (nr < 0 || nr >= n || nc < 0 || nc >= m || g[nr][nc] != 1) continue;\n                g[nr][nc] = 2;                         // mark visited WHEN ENQUEUED\n                --fresh;\n                q.push({nr, nc});\n            }\n        }\n        ++minutes;\n    }\n    return fresh == 0 ? minutes : -1;\n}\n\n// Single-source with explicit distances (no layer counter):\n// dist[src] = 0; q.push(src); while (!q.empty()) { u = pop; for v in adj[u]: if dist[v] == -1 { dist[v] = dist[u] + 1; q.push(v); } }",
+  "templateNotes": "Two lines carry the correctness: `g[nr][nc] = 2` **before** `q.push` (visited on enqueue), and `int layer = q.size()` **before** the inner loop (so newly pushed cells belong to the next layer).",
+  "canonical": [
+    { "title": "Rotting Oranges", "slug": "rotting-oranges", "difficulty": "Medium" },
+    { "title": "01 Matrix", "slug": "01-matrix", "difficulty": "Medium" },
+    { "title": "Shortest Path in Binary Matrix", "slug": "shortest-path-in-binary-matrix", "difficulty": "Medium" },
+    { "title": "Word Ladder", "slug": "word-ladder", "difficulty": "Hard" }
+  ],
+  "twists": [
+    "**State is bigger than a cell** (Shortest Path with Obstacle Elimination, keys and locks): BFS on `(r, c, extra)`; visited must include `extra`, and the answer may revisit a cell with a better `extra`.",
+    "**Weights 0 and 1** (Minimum Cost to Make at Least One Valid Path): 0-1 BFS — push weight-0 moves to the front of a deque, weight-1 to the back.",
+    "**Implicit graph** (Word Ladder, Open the Lock): nodes are strings; generate neighbours on the fly; visited is a hash set. Bidirectional BFS halves the depth when both ends are known.",
+    "**Farthest instead of nearest** (Tree diameter, As Far from Land as Possible): multi-source BFS and read the *last* layer's distance.",
+    "**Count reachable, not distance** (Number of Islands): BFS/DFS flood fill; the queue order does not matter, only the visited marking."
+  ],
+  "followups": [
+    "Edges now have different positive weights — what changes?",
+    "The grid is 10^5 × 10^5 but mostly empty — can you avoid O(nm)?",
+    "Return the path, not just its length.",
+    "Two people move alternately and must meet — how does the state change?"
+  ],
+  "pitfalls": [
+    "Marking visited on pop instead of on push → the same cell enqueued many times, memory blow-up, and a wrong layer count.",
+    "Forgetting to enqueue *all* sources in a multi-source problem and running BFS per source instead.",
+    "Off-by-one in the layer counter: the final layer that discovers nothing must not add a minute.",
+    "Using DFS for shortest path 'because it is simpler' — it does not give shortest without exploring everything.",
+    "Bounds check written as `nr > n` instead of `nr >= n`."
+  ]
+}
